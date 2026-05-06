@@ -8,7 +8,7 @@ namespace Drupal\umdlib_hours\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\umdlib_hours\Controller\UmdLibHoursController;
+use Drupal\umdlib_hours\Controller\UmdLibHoursCalController;
 
 /**
  * Implements the UmdLibHoursBlock
@@ -30,7 +30,7 @@ class UmdLibHoursCalBlock extends BlockBase {
     $events = $libCalController->getEvents($blockConfig['limit']);
     $no_events = $blockConfig['no_events_text'];
     return [
-      '#theme' => 'umdlib_hours_block',
+      '#theme' => 'umdlib_calendar_block',
       '#events' => $events,
       '#no_events' => $no_events,
       '#cache' => [

@@ -1,14 +1,14 @@
 <?php
 /**
  * @file
- * Definition of Drupal\lib_hours\Controller\UmdLibHoursController
+ * Definition of Drupal\umdlib_hours\Controller\UmdLibHoursCalController
  */
 
-namespace Drupal\lib_hours\Controller;
+namespace Drupal\umdlib_hours\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\lib_hours\Helper\UmdLibHoursSettingsHelper;
-use Drupal\lib_hours\Helper\UmdLibHoursApiHelper;
+use Drupal\umdlib_hours\Helper\UmdLibHoursSettingsHelper;
+use Drupal\umdlib_hours\Helper\UmdLibHoursApiHelper;
 use Drupal\Core\Security\TrustedCallbackInterface;
  /**
   * Implementation of UmdLibHoursController
@@ -20,7 +20,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 
     public function __construct() {
       $this->configHelper = UmdLibHoursSettingsHelper::getInstance();
-      $this->cid = 'lib_hours:' . \Drupal::languageManager()
+      $this->cid = 'umdlib_hours:' . \Drupal::languageManager()
         ->getCurrentLanguage()
         ->getId();
     }
@@ -72,7 +72,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
       
       // Verify configuration
       if ($endpoint == null) {
-        \Drupal::logger('lib_hours')->notice('LibCal API Configuration missing!');
+        \Drupal::logger('umdlib_hours')->notice('LibCal API Configuration missing!');
         return FALSE;
       }
 

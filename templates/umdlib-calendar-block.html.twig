@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * lib-cal-block template
+ *
+ * Variables:
+ *   - events
+ *   - no_events
+ */
+#}
+{% if events|length > 0 %}
+  {% for event in events %}
+    {% embed 'umdlib_umdds:umd-libraries-event' with { homepage_events: true,
+      event_title: event.title, event_date: event.month ~ ' ' ~ event.day, event_time: event.hour, event_url: event.url } %}
+      {% block event_date %}{{ event.month }} {{ event.day }}{% endblock %}
+      {% block event_time %}{{ event.hour }}{% endblock %}
+      {% block event_title %}{{ event.title }}{% endblock %}
+      {% block event_url %}{{ event.url }}{% endblock %}
+    {% endembed %}
+  {% endfor %}
+{% endif %}
