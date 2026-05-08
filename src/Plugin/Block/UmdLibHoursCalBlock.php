@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Definition of Drupal\umdlib_hours\Plugin\Block\UmdLibHoursBlock
+ * Definition of Drupal\umdlib_hours\Plugin\Block\UmdLibHoursCalBlock
  */
 
 namespace Drupal\umdlib_hours\Plugin\Block;

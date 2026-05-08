@@ -120,20 +120,38 @@ class UmdLibHoursApiHelper {
   }
 
   public function getEvents($calendar_id, $limit=3, $days_out=90) {
-    $events_url = $this->data_endpoint . "events?cal_id=$calendar_id&limit=$limit&days=$days_out";
+    $events_url = $this->data_endpoint . "events?cal_id=$calendar_id&limit=$limit&days=$days_out&event_note=1";
     $response = $this->curlRequest($events_url, $this->getTokenString());
     $processed_events = null;
     if ($response != null) {
       $events = $response['events'];
       $processed_events = array_map(function ($event) {
+        $date = null;
+        if (!empty($event['start'])) {
+          $date = date_create_from_format('Y-m-d\TH:i:sT', $event['start']);
+          if (!empty($date)) {
+            $date_full = date_format($date, 'M j, Y');
+            $time_full = date_format($date, 'g:iA');
+          }
+        }
         $date = date_create_from_format('Y-m-d\TH:i:sT', $event['start']);
+        $location = !empty($event['location']) && !empty($event['location']['name']) ? $event['location']['name'] : null;
+        if (empty($location)) {
+          $location = !empty($event['online_join_url']) ? "Virtual" : null;
+        }
+        $event_url = null;
+        if (!empty($event['url']['public'])) {
+          $event_url = $event['url']['public'];
+        }
+        $event_description = !empty($event['description']) ? \html_entity_decode(\strip_tags($event['description']), ENT_QUOTES, 'UTF-8') : null;
         return [
           'id' => $event['id'],
           'title' => $event['title'],
-          'month' => date_format($date, 'M'),
-          'day' => date_format($date, 'j'),
-          'hour' => date_format($date, 'g:iA'),
-          'url' => $event['url']['public'],
+          'hour' => !empty($time_full) ? $time_full : null,
+          'date' => !empty($date_full) ? $date_full : null,
+          'url' => $event_url,
+          'description' => $event_description,
+          'location' => $location,
           'category' => array_values(
             array_filter(
               array_map(
