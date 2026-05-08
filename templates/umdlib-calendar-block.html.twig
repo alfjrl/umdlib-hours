@@ -5,15 +5,22 @@
  *
  * Variables:
  *   - events
- *   - no_events
  */
 #}
 {% if events|length > 0 %}
   {% embed 'umdlib_umdds:umd-libraries-layout' with { columns: '3' } %}
     {% block components %}
       {% for event in events %}
-        {% embed 'umdlib_umdds:umd-libraries-event' with { homepage_events: true,
-          event_title: event.title, event_date: event.date, event_time: event.hour, event_url: event.url, event_description: event.description, event_location: event.location } %}
+        {% embed 'umdlib_umdds:umd-libraries-event' with {
+            homepage_events: true,
+            event_title: event.title,
+            event_date: event.date,
+            event_time: event.hour,
+            event_url: event.url,
+            event_description: event.description,
+            event_location: event.location
+          }
+        %}
           {% block event_date %}{{ event.date }}{% endblock %}
           {% block event_time %}{{ event.hour }}{% endblock %}
           {% block event_title %}{{ event.title }}{% endblock %}
