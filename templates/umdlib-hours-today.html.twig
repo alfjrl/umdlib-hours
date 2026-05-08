@@ -19,7 +19,7 @@
           {% if location.name is not empty %}
             {% set lib_id = location.lid %}
             <div class="utility-border">
-              <span class="utility-location">
+              <div class="utility-location">
                 {% if locations[lib_id] and show_location %}
                   {% if urls[lib_id] %}
                     <a href="{{urls[lib_id]}}">
@@ -31,11 +31,11 @@
                 {% elseif show_location %}
                   {{ location.name|raw }}
                 {% endif %}
-                {% if  show_location and location.name == 'McKeldin Library' %}<span style="font-weight: 1">(Main)</span>{% endif %}
-              </span>
-              <span class="utility-hours"> 
+                {% if  show_location and location.name == 'McKeldin Library' %}<span>(Main)</span>{% endif %}
+              </div>
+              <div class="utility-hours"> 
                 {% if current_date %}
-                  <p>Today - {{ current_date|date("m/d/Y l") }}</p>
+                  <p style="margin-bottom: var(--space-xs);">Today - {{ current_date|date("l, F j") }}</p>
                 {% endif %}
                 {% if location.dates %}
                   {% for date, location_info in location.dates %}
@@ -72,9 +72,9 @@
                     {% endif %}
                   {% endfor %}
                 {% elseif location.name %}
-                  Contact us for hours
+                <p>Contact us for hours</p>
                 {% endif %}
-              </span>
+              </div>
             </div>
             {% endif %}
           {% endfor %}
