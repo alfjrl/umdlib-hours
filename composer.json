@@ -1,0 +1,12 @@
+{
+    "name": "umd-lib/umdlib_hours",
+    "description": "Drupal module to pull hours and calendar information from LibCal.",
+    "type": "drupal-module",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "UMD Libraries"
+        }
+    ],
+    "minimum-stability": "beta"
+}
