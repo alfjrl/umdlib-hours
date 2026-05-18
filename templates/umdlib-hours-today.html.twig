@@ -41,17 +41,11 @@
                   {% for date, location_info in location.dates %}
                     {% if location_info.hours %}
                       {% for hours_info in location_info.hours %}
-                        {% if location.name == 'McKeldin Library' %}
-                          {{ hours_info.from|replace({'12:00AM' : '24 Hours'}) }} 
-                          {%if hours_info.to %}
-                            <p>Open: {{ hours_info.to|replace({'12:00AM' : '24 Hours'}) }}</p>
-                          {% endif %}
+                        {% if hours_info.from == '12:00AM' and hours_info.to == '12:00AM' %}
+                          {% set twentyFourHrs = TRUE %}
+                          <p>Open: 24 Hours*</p>
                         {% else %}
-                          <p>Open: {{ hours_info.from }} 
-                          {%if hours_info.to %}
-                              - {{ hours_info.to }}
-                          {% endif %}
-                          </p>
+                          <p>Open: {{ hours_info.from|replace({'12:00AM' : '24 Hours'}) }}{% if hours_info.to %} - {{ hours_info.to|replace({'12:00AM' : '24 Hours'}) }}{% endif %}</p>
                         {% endif %}
                       {% endfor %}
                     {% elseif location_info.status %}
@@ -60,14 +54,8 @@
                       {% elseif location_info.status == 'closed' %}
                         <p>Closed</p>
                       {% elseif location_info.status == '24hours' %}
-                        <p>Open: 24 Hours *</p>
                         {% set twentyFourHrs = TRUE %}
-                      {% endif %}
-                      {% if hours_info.to == '12:00AM' %}
-                        {% set twentyFourHrs = TRUE %}
-                      {% endif %}
-                      {% if hours_info.from == '12:00AM' %}
-                        {% set twentyFourHrs = TRUE %}
+                        <p>Open: 24 Hours*</p>
                       {% endif %}
                     {% endif %}
                   {% endfor %}
@@ -76,14 +64,14 @@
                 {% endif %}
               </div>
             </div>
-            {% endif %}
-          {% endfor %}
-        {% endif %}
-        {% if twentyFourHrs == TRUE %}
-          <div class="hours-heading-note">
-            <p>* Campus ID required 11pm-8am</p>
-          </div>
-        {% endif %}
-      </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      {% if twentyFourHrs == TRUE %}
+        <div class="hours-heading-note">
+          <p>* Campus ID required 11pm–8am.</p>
+        </div>
+      {% endif %}
     </div>
   </div>
+</div>
