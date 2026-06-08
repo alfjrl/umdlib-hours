@@ -8,6 +8,11 @@
  *   - branch_prefix
  *   - branch_suffix
  *   - show_location
+ *   - location_page
+ *
+ * When location_page is enabled, an empty .hours-status[data-hours] span is
+ * emitted per location; js/lib-hours-open-now.js fills it with an
+ * "Open now" / "Closed now" badge computed in the browser (Eastern time).
  */
 #}
 {% set twentyFourHrs = FALSE %}
@@ -31,36 +36,63 @@
                 {% elseif show_location %}
                   {{ location.name|raw }}
                 {% endif %}
-                {% if  show_location and location.name == 'McKeldin Library' %}<span>(Main)</span>{% endif %}
+                {% if show_location and location.name == 'McKeldin Library' %}<span>(Main)</span>{% endif %}
               </div>
-              <div class="utility-hours"> 
-                {% if current_date %}
-                  <p style="margin-bottom: var(--space-xs);">Today - {{ current_date|date("l, F j") }}</p>
-                {% endif %}
-                {% if location.dates %}
-                  {% for date, location_info in location.dates %}
-                    {% if location_info.hours %}
-                      {% for hours_info in location_info.hours %}
-                        {% if hours_info.from == '12:00AM' and hours_info.to == '12:00AM' %}
+              <div class="utility-hours">
+                {% if location_page %}
+                  <span class="hours-status" style="display: none;" data-hours="{{ location.dates|json_encode|e('html_attr') }}"></span>
+                  {% if location.dates %}
+                    {% for date, location_info in location.dates %}
+                      {% if location_info.hours %}
+                        {% for hours_info in location_info.hours %}
+                          {% if hours_info.from == '12:00AM' and hours_info.to == '12:00AM' %}
+                            {% set twentyFourHrs = TRUE %}
+                            <p class="utility-hours-line">{{ current_date|date("l, F j") }}  ·  24 Hours*</p>
+                          {% else %}
+                            <p class="utility-hours-line">{{ current_date|date("l, F j") }}  ·  {{ hours_info.from|replace({'12:00AM' : '24 Hours'}) }}{% if hours_info.to %} - {{ hours_info.to|replace({'12:00AM' : '24 Hours'}) }}{% endif %}</p>
+                          {% endif %}
+                        {% endfor %}
+                      {% elseif location_info.status %}
+                        {% if location_info.status == 'text' %}
+                          <p class="utility-hours-line">{{ location_info.text|raw }}</p>
+                        {% elseif location_info.status == 'closed' %}
+                          <p class="utility-hours-line">{{ current_date|date("l, F j") }}  ·  Closed</p>
+                        {% elseif location_info.status == '24hours' %}
+                          {% set twentyFourHrs = TRUE %}
+                          <p class="utility-hours-line">{{ current_date|date("l, F j") }}  ·  24 Hours*</p>
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                {% else %}
+                  {% if current_date %}
+                    <p style="margin-bottom: var(--space-xs);">Today - {{ current_date|date("l, F j") }}</p>
+                  {% endif %}
+                  {% if location.dates %}
+                    {% for date, location_info in location.dates %}
+                      {% if location_info.hours %}
+                        {% for hours_info in location_info.hours %}
+                          {% if hours_info.from == '12:00AM' and hours_info.to == '12:00AM' %}
+                            {% set twentyFourHrs = TRUE %}
+                            <p>Open: 24 Hours*</p>
+                          {% else %}
+                            <p>Open: {{ hours_info.from|replace({'12:00AM' : '24 Hours'}) }}{% if hours_info.to %} - {{ hours_info.to|replace({'12:00AM' : '24 Hours'}) }}{% endif %}</p>
+                          {% endif %}
+                        {% endfor %}
+                      {% elseif location_info.status %}
+                        {% if location_info.status == 'text' %}
+                          <p>{{ location_info.text|raw }}</p>
+                        {% elseif location_info.status == 'closed' %}
+                          <p>Closed</p>
+                        {% elseif location_info.status == '24hours' %}
                           {% set twentyFourHrs = TRUE %}
                           <p>Open: 24 Hours*</p>
-                        {% else %}
-                          <p>Open: {{ hours_info.from|replace({'12:00AM' : '24 Hours'}) }}{% if hours_info.to %} - {{ hours_info.to|replace({'12:00AM' : '24 Hours'}) }}{% endif %}</p>
                         {% endif %}
-                      {% endfor %}
-                    {% elseif location_info.status %}
-                      {% if location_info.status == 'text' %}
-                        <p>{{ location_info.text|raw }}</p>
-                      {% elseif location_info.status == 'closed' %}
-                        <p>Closed</p>
-                      {% elseif location_info.status == '24hours' %}
-                        {% set twentyFourHrs = TRUE %}
-                        <p>Open: 24 Hours*</p>
                       {% endif %}
-                    {% endif %}
-                  {% endfor %}
-                {% elseif location.name %}
-                <p>Contact us for hours</p>
+                    {% endfor %}
+                  {% elseif location.name %}
+                    <p>Contact us for hours</p>
+                  {% endif %}
                 {% endif %}
               </div>
             </div>
