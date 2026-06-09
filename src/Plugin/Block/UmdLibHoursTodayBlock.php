@@ -96,6 +96,8 @@ class UmdLibHoursTodayBlock extends BlockBase {
       $hours_class = 'hours-main';
     }
 
+    $location_page = $blockConfig['location_page'] ?? FALSE;
+
     return [
       '#theme' => $template,
       '#locations' => $locations,
@@ -108,8 +110,12 @@ class UmdLibHoursTodayBlock extends BlockBase {
       '#week_date' => $week_date,
       '#is_mobile' => $is_mobile,
       '#show_location' => $show_location,
+      '#location_page' => $location_page,
       '#shady_grove_url' => $blockConfig['shady_grove_url'],
       '#all_libraries_url' => $blockConfig['all_libraries_url'],
+      '#attached' => $location_page ? [
+        'library' => ['umdlib_hours/umdlib-hours-open-now'],
+      ] : [],
       '#cache' => [
         'max-age' => 3600,
       ]
@@ -236,6 +242,12 @@ class UmdLibHoursTodayBlock extends BlockBase {
       '#title' => t('Hide location'),
       '#default_value' => !empty($config['location_display']) ? $config['location_display'] : NULL,
     ];
+    $form['location_page'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Location detail page layout'),
+      '#description' => t('Note: Only affects Today displays. Formats hours for a location detail page and shows a live Open now / Closed now status badge.'),
+      '#default_value' => !empty($config['location_page']) ? $config['location_page'] : NULL,
+    ];
     return $form;
   }
 
@@ -295,5 +307,6 @@ class UmdLibHoursTodayBlock extends BlockBase {
     $this->setConfigurationValue('display_type', $form_state->getValue('display_type'));
     $this->setConfigurationValue('is_mobile', $form_state->getValue('is_mobile'));
     $this->setConfigurationValue('location_display', $form_state->getValue('location_display'));
+    $this->setConfigurationValue('location_page', $form_state->getValue('location_page'));
   }
 }

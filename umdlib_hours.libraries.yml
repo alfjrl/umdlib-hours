@@ -4,3 +4,12 @@ umdlib-hours:
     theme:
       css/lib-cal.css: {}
       css/lib-hours.css: {}
+
+# Attached only when the "Location detail page layout" option is checked on the UmdLib Hours Today block. Powers the client-side "Open now" / "Closed now" badge.
+umdlib-hours-open-now:
+  version: 1.x
+  js:
+    js/lib-hours-open-now.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
